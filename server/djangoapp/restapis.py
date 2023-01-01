@@ -1,6 +1,6 @@
 import requests
 import json
-from .models import CarDealer#, DealerReview
+from .models import CarDealer, DealerReview
 from requests.auth import HTTPBasicAuth
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson import NaturalLanguageUnderstandingV1
@@ -52,13 +52,12 @@ def get_dealer_by_id_from_cf(url, id):
     json_result = get_request(url, id=id)
     
     if json_result:
-        dealers = json_result["body"]
+        dealers = json_result#["body"]
         
-    
-        dealer_doc = dealers["docs"][0]
-        dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"],
-                                id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
-                                
+        dealer_doc = dealers[0]#["docs"][0]
+        dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],
+                                id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],                                   
+                                short_name=dealer_doc["short_name"],
                                 st=dealer_doc["st"], zip=dealer_doc["zip"])
     return dealer_obj
 
@@ -69,13 +68,10 @@ def get_dealer_reviews_from_cf(url, **kwargs):
         json_result = get_request(url, id=id)
     else:
         json_result = get_request(url)
-
+    print(json_result,"96")
     if json_result:
-        reviews = json_result["body"]["data"]
-
+        reviews = json_result["data"]["docs"]
         for dealer_review in reviews:
-            dealer_review = reviews["docs"][0]
-            
             review_obj = DealerReview(dealership=dealer_review["dealership"],
                                    name=dealer_review["name"],
                                    purchase=dealer_review["purchase"],

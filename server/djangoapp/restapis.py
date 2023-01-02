@@ -94,7 +94,6 @@ def get_dealer_reviews_from_cf(url, **kwargs):
     return results
 
 def get_request(url, **kwargs):
-    
     # If argument contain API KEY
     api_key = kwargs.get("api_key")
     print("GET from {} ".format(url))
